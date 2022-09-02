@@ -31,7 +31,7 @@ public:
     // Using a data pointer and a size
     Array2D(const T *const data, const int rows, const int cols): m{rows}, n{cols}, data(data, rows*cols) {}
     // TODO: implement this copy constructor
-    Array2D(const Array2D &other): /* WRONG */ m{other.m}, n{other.n}, data{T{}} {}
+    Array2D(const Array2D &other): /* WRONG */ m{other.m}, n{other.n}, data{other.data} {}
 
     // Overload the assignment operator
     void operator=(const Array2D &other) {
@@ -40,11 +40,10 @@ public:
         data.resize(other.data.size());
         for (int i = 0; i < m; i++)
             for (int j = 0; j < n; j++)
-                data(i, j) = other.data(i, j);
+                data[i*cols + j] = other.data[i*cols + j];
         // TODO: set `n` and `data` to the correct values
         // HINT: you need to resize `data` to the size of `other.data` before assigning it; see "copy assignment" at
         //       https://www.cplusplus.com/reference/valarray/valarray/operator=/#description to understand why.
-
     }
 
     // Overload the call operator to take a pair of indices and return the corresponding cell of data

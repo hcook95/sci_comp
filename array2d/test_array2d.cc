@@ -99,7 +99,7 @@ TEST_CASE("Index operator works", "[array2d]") {
     REQUIRE(b[m-1][n/2] == (m-1)*n+n/2);
     REQUIRE(b[m-1][n-1] == m*n-1);
 
-    // rows can be used independently works
+    // independently using rows works
     for (size_t i=0; i<m*n; i++) d[i] = i%n; // each cell is the index of the column
     Array2D<int> c{d, m, n};
 
@@ -119,6 +119,36 @@ TEST_CASE("Array2Ds can be copied and assigned", "[array2d]") {
     // TODO: check that mutating a copied array doesn't mutate the original
     // TODO: check that assigning an already-created array (using `=`) to another array of different size works
     // TODO: check that mutating an assigned array doesn't mutate the original
+
+    // creating and then copying array works
+    size_t m = 5, n = 8;
+    Array2D<int> a{m, n};
+    for (size_t i=0; i<m; i++)
+        for (size_t j=0; j<n; j++)
+            a(i, j) = i * n + j; // each cell is the index of the column
+    
+    auto a_copy(a);
+
+    for (size_t i=0; i<m; i++)
+        for (size_t j=0; j<n; j++)
+            REQUIRE(a_copy(i, j) == a(i, j));
+    
+
+    // mutating copy array doesn't mutate the original
+    a_copy(2, 2) = 42;
+    REQUIRE(a_copy(2, 2) != a(2, 2));
+
+    // assigning predefined array to another array works
+    Array2D<int> a_copy2{2, 2};
+    a_copy2 = a;
+
+    for (size_t i=0; i<m; i++)
+        for (size_t j=0; j<n; j++)
+            REQUIRE(a_copy2(i, j) == a(i, j));
+
+    //mutating the assigned array doesn't mutate the original
+    a_copy2(2, 2) = 42;
+    REQUIRE(a_copy2(2, 2) != a(2, 2));
 }
 
 
@@ -128,4 +158,40 @@ TEST_CASE("Array2Ds can be swapped", "[array2d]") {
     // TODO: check that Array2Ds of differing size can be successfully swapped
     // TODO: check that the `rows` and `cols` of each Array2D are correct after the swap
     // TODO: check that the elements in each Array2D are correct after the swap
+
+    // Swapping arrays of differing sizes work works
+    size_t m = 5, n = 8;
+    int data_a[m*n];
+    int data_b[(m/2)*(n/2)];
+
+    for (int i = 0; i < m*n; i++)
+        data_a[i] = i;
+
+    int j = (m/2)*(n/2)-1;
+    for (int i = 0; i < (m/2)*(n/2)-1; i++)
+        data_b[i] = j--; //counts down to zeros
+
+    
+
+    Array2D<int> a{data_a, m, n};
+    Array2D<int> b{data_b, m/2, n/2};
+    swap(a, b);
+
+    // sizes are correctly swapped
+    REQUIRE(a.rows == m/2);
+    REQUIRE(a.cols == n/2);
+
+    REQUIRE(b.rows == m);
+    REQUIRE(b.cols == n);
+
+    // elements are correctly swapped 
+    int k = 0;
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < n; j++)
+            REQUIRE(b(i, j) == k++);
+
+    k = (m/2)*(n/2)-1;
+    for (int i = 0; i < m/2; i++)
+        for (int j = 0; j < n/2; j++)
+            REQUIRE(a(i, j) == k--); //counts down from 0
 }
