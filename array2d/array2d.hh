@@ -57,7 +57,12 @@ public:
     const auto operator[](const int i) const {return begin(data)+i*cols;}
 
     // Swap this Array2D with another
-    friend void swap(Array2D &x, Array2D &y) {std::swap(x, y);}
+    friend void swap(Array2D &x, Array2D &y) {
+        Array2D tmp(y);
+        y = x;
+        x = tmp;
+        // swap(x.data, y.data);
+    }
 };
 
 

@@ -168,8 +168,10 @@ TEST_CASE("Array2Ds can be swapped", "[array2d]") {
         data_a[i] = i;
 
     int j = (m/2)*(n/2)-1;
-    for (int i = 0; i < (m/2)*(n/2)-1; i++)
+    for (int i = 0; i < (m/2)*(n/2); i++)
+    {
         data_b[i] = j--; //counts down to zeros
+    }
 
     
 

@@ -1,23 +1,52 @@
 #include "array2d.hh"
 #include <iostream>
 
+using namespace std;
+
 int main()
 {
     size_t m = 5, n = 8;
-    // Array2D<int> a{m, n};
-    // for (size_t i=0; i<m; i++)
-    //     for (size_t j=0; j<n; j++)
-    //         a(i, j) = 1 + 2 * i; // consecutive odd numbers; n of them sum to n^2
+    int data_a[m*n];
+    int data_b[(m/2)*(n/2)];
 
-    int d[m*n];
-    for (size_t i=0; i<m*n; i++) d[i] = i; // each cell is the index of the underlying valarray
-    Array2D<int> b{d, m, n};
+    for (int i = 0; i < m*n; i++)
+        data_a[i] = i;
+
+    int j = (m/2)*(n/2)-1;
+    for (int i = 0; i < (m/2)*(n/2); i++)
+    {
+        cout << j << endl;
+        data_b[i] = j--; //counts down to zeros
+    }
+
+    cout << endl;
 
     
-    for (size_t i=0; i<m; i++)
-        for (size_t j=0; j<n; j++)
-            std::cout << "i: " << i << "\tj: " << j << "\tval: " << b[i][j] << "\n";
-    
-    // REQUIRE(a(0, 0) == 1);
-    // REQUIRE(a(m-1, n-1) == 1*2*m-1);
+
+    Array2D<int> a{data_a, m, n};
+    Array2D<int> b{data_b, m/2, n/2};
+    swap(a, b);
+
+    // sizes are correctly swapped
+    // REQUIRE(a.rows == m/2);
+    // REQUIRE(a.cols == n/2);
+
+    // REQUIRE(b.rows == m);
+    // REQUIRE(b.cols == n);
+
+    // // elements are correctly swapped 
+    int k = 0;
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < n; j++)
+            cout << b(i, j) << endl;
+    //         REQUIRE(b(i, j) == k++);
+
+    cout << endl;
+
+    k = (m/2)*(n/2)-1;
+    for (int i = 0; i < m/2; i++)
+        for (int j = 0; j < n/2; j++)
+            cout << a(i, j) << endl;
+    //         REQUIRE(a(i, j) == k--); //counts down from 0
+    return 0;
 }
