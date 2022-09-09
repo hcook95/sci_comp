@@ -58,10 +58,13 @@ public:
 
     // Swap this Array2D with another
     friend void swap(Array2D &x, Array2D &y) {
-        Array2D tmp(y);
-        y = x;
-        x = tmp;
-        // swap(x.data, y.data);
+        // Array2D tmp(y);
+        // y = x;
+        // x = tmp;
+
+        std::swap(x.data, y.data);
+        std::swap(x.m, y.m);
+        std::swap(x.n, y.n);
     }
 };
 
